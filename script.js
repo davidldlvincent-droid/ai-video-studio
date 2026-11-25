@@ -137,7 +137,7 @@
         var alpha = p.a * (0.6 + 0.4 * Math.sin(p.tw));
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(240, 212, 122, " + alpha.toFixed(3) + ")";
+        ctx.fillStyle = "rgba(232, 150, 158, " + alpha.toFixed(3) + ")";
         ctx.fill();
       });
       requestAnimationFrame(tick);
