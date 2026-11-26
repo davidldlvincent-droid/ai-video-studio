@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Empire Studio</title>
+  <link rel="icon" type="image/png" href="assets/logo-mark.png">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+    .admin-card { background: var(--panel); border: 1px solid var(--line-soft); border-radius: 14px; padding: 28px; box-shadow: var(--shadow); margin-bottom: 28px; }
+    .admin-card h2 { font-family: "Playfair Display", serif; margin: 0 0 6px; }
+    .admin-card p.hint { color: var(--muted); margin: 0 0 18px; }
+    .admin-card label { display: block; font-weight: 600; margin: 16px 0 6px; }
+    .admin-card input[type="text"], .admin-card input[type="email"], .admin-card input[type="password"],
+    .admin-card select, .admin-card textarea {
+      width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid var(--line-soft);
+      border-radius: 9px; background: #fff; font: inherit; color: var(--cream);
+    }
+    .admin-card input[type="file"] { width: 100%; font: inherit; }
+    .admin-btn { display: inline-block; margin-top: 22px; background: var(--gold); color: #fff; border: 0;
+      padding: 12px 26px; border-radius: 999px; font: inherit; font-weight: 700; cursor: pointer; }
+    .admin-btn:hover { background: var(--gold-2); }
+    .admin-btn.secondary { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+    .admin-btn.danger { background: transparent; color: #a11; border: 1px solid #a11; padding: 7px 16px; margin-top: 0; font-size: 0.9em; }
+    .admin-msg { margin-top: 16px; padding: 12px 15px; border-radius: 9px; display: none; }
+    .admin-msg.ok { display: block; background: #eef7ee; border: 1px solid #9c9; }
+    .admin-msg.err { display: block; background: #fbeeec; border: 1px solid #d99; }
+    .admin-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+    .admin-row img { width: 96px; height: 54px; object-fit: cover; border-radius: 6px; background: #000; }
+    .admin-row .grow { flex: 1; }
+    .admin-row .grow strong { display: block; }
+    .admin-row .grow span { color: var(--muted); font-size: 0.9em; }
+    progress { width: 100%; height: 10px; margin-top: 14px; display: none; }
+  </style>
+</head>
+<body data-page="admin">
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><img class="logo-mark" src="assets/logo-mark.png" alt="Empire Studio logo"><span class="logo-text"><strong>EMPIRE</strong><span>Studio</span></span></a>
+    <nav class="nav-links">
+      <a href="portfolio.html">View Portfolio</a>
+      <a href="#" id="logout-link" style="display:none">Log out</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="admin-wrap">
+    <span class="eyebrow">Admin Portal</span>
+    <h1 style="font-family:'Playfair Display',serif;">Add a film to the portfolio</h1>
+    <p style="color:var(--muted)">Films added here appear on the portfolio page straight away. No GitHub, no code.</p>
+
+    <div class="admin-card" id="setup-card" style="display:none">
+      <h2>Almost there</h2>
+      <p class="hint">The database is not connected yet. Once the Supabase project is set up and its
+      URL and public key are placed in <em>assets/js/supabase-config.js</em>, this page becomes the working portal.</p>
+    </div>
+
+    <div class="admin-card" id="login-card" style="display:none">
+      <h2>Admin login</h2>
+      <p class="hint">Sign in with the admin email and password created in Supabase.</p>
+      <form id="login-form">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required autocomplete="username">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required autocomplete="current-password">
+        <button class="admin-btn" type="submit">Log in</button>
+        <div class="admin-msg" id="login-msg"></div>
+      </form>
+    </div>
+
+    <div class="admin-card" id="upload-card" style="display:none">
+      <h2>New trailer</h2>
+      <p class="hint">The poster is taken from the film automatically if you do not upload one.</p>
+      <form id="upload-form">
+        <label for="f-title">Title</label>
+        <input type="text" id="f-title" required placeholder="e.g. The Three Musketeers">
+        <label for="f-cat">Category</label>
+        <select id="f-cat">
+          <option value="trailer" selected>Book Trailer</option>
+          <option value="concept">Trailer Concept</option>
+          <option value="promo">Promotional Image</option>
+          <option value="website">Author Website</option>
+          <option value="launch">Launch Campaign</option>
+          <option value="shortform">Short-Form Ad</option>
+          <option value="cover">Animated Cover</option>
+          <option value="spotlight">Author Spotlight</option>
+        </select>
+        <label for="f-catlabel">Category label shown on the card</label>
+        <input type="text" id="f-catlabel" value="Book Trailer">
+        <label for="f-desc">Description</label>
+        <textarea id="f-desc" rows="3" placeholder="After Alexandre Dumas. ..."></textarea>
+        <label for="f-video">Video file (MP4)</label>
+        <input type="file" id="f-video" accept="video/mp4,video/*" required>
+        <label for="f-poster">Poster image (optional)</label>
+        <input type="file" id="f-poster" accept="image/*">
+        <progress id="up-progress" max="100" value="0"></progress>
+        <button class="admin-btn" type="submit" id="publish-btn">Publish to portfolio</button>
+        <div class="admin-msg" id="up-msg"></div>
+      </form>
+    </div>
+
+    <div class="admin-card" id="list-card" style="display:none">
+      <h2>Films added through this portal</h2>
+      <p class="hint">The films built into the site itself are managed in the site files, as before.</p>
+      <div id="trailer-list"></div>
+    </div>
+  </div>
+</main>
+
+<script src="assets/js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  "use strict";
+  var cfg = window.EMPIRE_SUPABASE;
+  var $ = function (id) { return document.getElementById(id); };
+
+  if (!cfg || !cfg.url || !cfg.anonKey || !window.supabase) {
+    $("setup-card").style.display = "block";
+    return;
+  }
+  var sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+
+  function showMsg(id, text, ok) {
+    var el = $(id);
+    el.textContent = text;
+    el.className = "admin-msg " + (ok ? "ok" : "err");
+  }
+
+  function slug(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "trailer";
+  }
+
+  function publicUrl(bucket, path) {
+    return cfg.url + "/storage/v1/object/public/" + bucket + "/" + path;
+  }
+
+  function grabPoster(file) {
+    return new Promise(function (resolve) {
+      var url = URL.createObjectURL(file);
+      var v = document.createElement("video");
+      v.muted = true; v.src = url; v.crossOrigin = "anonymous";
+      v.addEventListener("loadedmetadata", function () {
+        v.currentTime = Math.min(12, (v.duration || 12) / 2);
+      });
+      v.addEventListener("seeked", function () {
+        try {
+          var c = document.createElement("canvas");
+          c.width = v.videoWidth || 1280; c.height = v.videoHeight || 720;
+          c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
+          c.toBlob(function (b) { URL.revokeObjectURL(url); resolve(b); }, "image/jpeg", 0.85);
+        } catch (e) { resolve(null); }
+      });
+      v.addEventListener("error", function () { resolve(null); });
+    });
+  }
+
+  function refreshList() {
+    sb.from("trailers").select("*").order("created_at", { ascending: false })
+      .then(function (res) {
+        var box = $("trailer-list");
+        box.innerHTML = "";
+        if (res.error || !res.data || !res.data.length) {
+          box.innerHTML = "<p style='color:var(--muted)'>Nothing added through the portal yet.</p>";
+          return;
+        }
+        res.data.forEach(function (t) {
+          var row = document.createElement("div");
+          row.className = "admin-row";
+          row.innerHTML = (t.poster_url ? '<img src="' + t.poster_url + '" alt="">' : '<img alt="">') +
+            '<div class="grow"><strong></strong><span></span></div>';
+          row.querySelector("strong").textContent = t.title;
+          row.querySelector("span").textContent = t.category_label || "";
+          var btn = document.createElement("button");
+          btn.className = "admin-btn danger";
+          btn.textContent = "Remove";
+          btn.addEventListener("click", function () {
+            if (!confirm("Remove \"" + t.title + "\" from the portfolio?")) return;
+            sb.from("trailers").delete().eq("id", t.id).then(function () {
+              [["videos", t.video_url], ["posters", t.poster_url]].forEach(function (pair) {
+                if (!pair[1]) return;
+                var marker = "/object/public/" + pair[0] + "/";
+                var idx = pair[1].indexOf(marker);
+                if (idx !== -1) sb.storage.from(pair[0]).remove([pair[1].slice(idx + marker.length)]);
+              });
+              refreshList();
+            });
+          });
+          row.appendChild(btn);
+          box.appendChild(row);
+        });
+      });
+  }
+
+  function showPortal(session) {
+    $("login-card").style.display = session ? "none" : "block";
+    $("upload-card").style.display = session ? "block" : "none";
+    $("list-card").style.display = session ? "block" : "none";
+    $("logout-link").style.display = session ? "" : "none";
+    if (session) refreshList();
+  }
+
+  sb.auth.getSession().then(function (res) { showPortal(res.data.session); });
+  sb.auth.onAuthStateChange(function (_e, session) { showPortal(session); });
+
+  $("logout-link").addEventListener("click", function (e) {
+    e.preventDefault();
+    sb.auth.signOut();
+  });
+
+  $("login-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    sb.auth.signInWithPassword({
+      email: $("login-email").value.trim(),
+      password: $("login-password").value
+    }).then(function (res) {
+      if (res.error) showMsg("login-msg", "Login failed: " + res.error.message, false);
+    });
+  });
+
+  $("upload-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("publish-btn");
+    var video = $("f-video").files[0];
+    if (!video) return;
+    btn.disabled = true;
+    var bar = $("up-progress");
+    bar.style.display = "block"; bar.value = 10;
+    showMsg("up-msg", "Uploading the film...", true);
+
+    var base = slug($("f-title").value) + "-" + Date.now();
+    var videoPath = base + ".mp4";
+    var posterPath = base + ".jpg";
+
+    sb.storage.from("videos").upload(videoPath, video, { contentType: video.type || "video/mp4" })
+      .then(function (res) {
+        if (res.error) throw res.error;
+        bar.value = 60;
+        var posterFile = $("f-poster").files[0];
+        var posterPromise = posterFile ? Promise.resolve(posterFile) : grabPoster(video);
+        return posterPromise.then(function (posterBlob) {
+          if (!posterBlob) return "";
+          return sb.storage.from("posters").upload(posterPath, posterBlob, { contentType: "image/jpeg" })
+            .then(function (r2) { return r2.error ? "" : publicUrl("posters", posterPath); });
+        });
+      })
+      .then(function (posterUrl) {
+        bar.value = 85;
+        return sb.from("trailers").insert({
+          title: $("f-title").value.trim(),
+          category: $("f-cat").value,
+          category_label: $("f-catlabel").value.trim() || "Book Trailer",
+          badge: "Finished Film",
+          description: $("f-desc").value.trim(),
+          video_url: publicUrl("videos", videoPath),
+          poster_url: posterUrl || ""
+        });
+      })
+      .then(function (res) {
+        if (res.error) throw res.error;
+        bar.value = 100;
+        showMsg("up-msg", "Published. It is live on the portfolio page now.", true);
+        $("upload-form").reset();
+        $("f-catlabel").value = "Book Trailer";
+        refreshList();
+      })
+      .catch(function (err) {
+        showMsg("up-msg", "Something went wrong: " + (err.message || err), false);
+      })
+      .finally(function () {
+        btn.disabled = false;
+        setTimeout(function () { bar.style.display = "none"; }, 1500);
+      });
+  });
+})();
+</script>
+</body>
+</html>
