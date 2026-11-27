@@ -72,6 +72,20 @@
         <input type="password" id="login-password" required autocomplete="current-password">
         <button class="admin-btn" type="submit">Log in</button>
         <div class="admin-msg" id="login-msg"></div>
+        <p class="hint" style="margin-top:16px"><a href="#" id="forgot-link">Forgot your password?</a></p>
+      </form>
+    </div>
+
+    <div class="admin-card" id="recovery-card" style="display:none">
+      <h2>Set a new password</h2>
+      <p class="hint">You came from the password reset email. Type the new password you want for this portal.</p>
+      <form id="recovery-form">
+        <label for="rec-password">New password</label>
+        <input type="password" id="rec-password" required autocomplete="new-password">
+        <label for="rec-password2">Type it again</label>
+        <input type="password" id="rec-password2" required autocomplete="new-password">
+        <button class="admin-btn" type="submit">Save new password</button>
+        <div class="admin-msg" id="rec-msg"></div>
       </form>
     </div>
 
@@ -207,8 +221,52 @@
     if (session) refreshList();
   }
 
-  sb.auth.getSession().then(function (res) { showPortal(res.data.session); });
-  sb.auth.onAuthStateChange(function (_e, session) { showPortal(session); });
+  var recoveryMode = false;
+  if (window.location.hash && window.location.hash.indexOf("type=recovery") !== -1) recoveryMode = true;
+
+  function showRecovery() {
+    recoveryMode = true;
+    $("login-card").style.display = "none";
+    $("upload-card").style.display = "none";
+    $("list-card").style.display = "none";
+    $("setup-card").style.display = "none";
+    $("recovery-card").style.display = "block";
+  }
+
+  sb.auth.getSession().then(function (res) { if (!recoveryMode) showPortal(res.data.session); });
+  sb.auth.onAuthStateChange(function (event, session) {
+    if (event === "PASSWORD_RECOVERY") { showRecovery(); return; }
+    if (!recoveryMode) showPortal(session);
+  });
+
+  $("recovery-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var pw = $("rec-password").value, pw2 = $("rec-password2").value;
+    if (pw.length < 8) { showMsg("rec-msg", "Please use at least 8 characters.", false); return; }
+    if (pw !== pw2) { showMsg("rec-msg", "The two passwords do not match.", false); return; }
+    sb.auth.updateUser({ password: pw }).then(function (res) {
+      if (res.error) { showMsg("rec-msg", "Could not set the password: " + res.error.message, false); return; }
+      showMsg("rec-msg", "Password saved. Taking you into the portal...", true);
+      recoveryMode = false;
+      sb.auth.getSession().then(function (r) {
+        setTimeout(function () {
+          $("recovery-card").style.display = "none";
+          showPortal(r.data.session);
+        }, 1200);
+      });
+    });
+  });
+
+  $("forgot-link").addEventListener("click", function (e) {
+    e.preventDefault();
+    var email = $("login-email").value.trim();
+    if (!email) { showMsg("login-msg", "Type your admin email above first, then tap Forgot your password.", false); return; }
+    sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname })
+      .then(function (res) {
+        if (res.error) showMsg("login-msg", "Could not send the reset email: " + res.error.message, false);
+        else showMsg("login-msg", "Reset email sent. Open it within the hour and set your new password.", true);
+      });
+  });
 
   $("logout-link").addEventListener("click", function (e) {
     e.preventDefault();
