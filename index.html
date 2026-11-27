@@ -33,6 +33,7 @@
   <section class="hero">
     <div class="hero-bg"><img src="assets/promo-poster.webp" alt="An open book glowing with golden light, pages turning into birds flying into a dark sky"></div>
     <canvas id="gold-dust"></canvas>
+    <canvas id="hero-3d"></canvas>
     <div class="wrap hero-inner">
       <span class="eyebrow">AI Video Studio for Authors</span>
       <h1>Your book,<br><span class="gold-text">on screen.</span></h1>
@@ -42,9 +43,9 @@
         <a class="btn btn-ghost" href="contact.html">Order Your Trailer</a>
       </div>
       <div class="hero-meta">
-        <div><strong>23</strong><span>Portfolio Pieces</span></div>
-        <div><strong>8</strong><span>Service Areas</span></div>
-        <div><strong>3</strong><span>Partners, One Studio</span></div>
+        <div><strong>Cinematic</strong><span>Directed like film, not slides</span></div>
+        <div><strong>Dialogue-led</strong><span>Real spoken lines, performed</span></div>
+        <div><strong>Author-first</strong><span>We read the book before filming</span></div>
       </div>
     </div>
     <div class="scroll-hint">Scroll</div>
@@ -174,14 +175,19 @@
     </div>
   </section>
 
-  <!-- STATS -->
+  <!-- THE EMPIRE STANDARD -->
   <section class="section alt">
     <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The Empire Standard</span>
+        <h2>Craft before <span class="gold-text">everything</span></h2>
+        <p>How every film in this studio is made, whatever the book, whatever the budget.</p>
+      </div>
       <div class="stats">
-        <div class="stat reveal"><strong>23</strong><span>Portfolio Pieces</span></div>
-        <div class="stat reveal"><strong>8</strong><span>Service Areas</span></div>
-        <div class="stat reveal"><strong>3</strong><span>Partners, One Studio</span></div>
-        <div class="stat reveal"><strong>1</strong><span>Goal — Your Book, Seen</span></div>
+        <div class="stat craft reveal"><strong>Read first.<br>Film second.</strong><span>Every trailer starts with the book itself, not a summary</span></div>
+        <div class="stat craft reveal"><strong>Lips that match<br>the words</strong><span>Dialogue performed on screen, never pasted over</span></div>
+        <div class="stat craft reveal"><strong>Covers from the<br>book's own era</strong><span>Historic first-edition art closes every trailer</span></div>
+        <div class="stat craft reveal"><strong>Endings that<br>don't let go</strong><span>A cliffhanger first, then your cover</span></div>
       </div>
     </div>
   </section>
@@ -235,6 +241,8 @@
   <figure><img src="" alt=""><figcaption></figcaption></figure>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="hero3d.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

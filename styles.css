@@ -117,6 +117,8 @@ h1, h2, h3, .serif {
     linear-gradient(180deg, rgba(5,5,5,0.82) 0%, rgba(5,5,5,0.55) 45%, rgba(5,5,5,0.97) 100%);
 }
 #gold-dust { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+#hero-3d { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.page-hero #hero-3d { opacity: 0.55; }
 .hero-inner { position: relative; z-index: 2; }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
@@ -135,6 +137,7 @@ h1, h2, h3, .serif {
 
 /* ---------- Page hero (inner pages) ---------- */
 .page-hero { padding: 170px 0 60px; position: relative; overflow: hidden; }
+.page-hero .wrap { position: relative; z-index: 2; }
 .page-hero::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(155, 28, 44, 0.10), transparent 70%);
@@ -237,6 +240,8 @@ h1, h2, h3, .serif {
 /* ---------- Stats ---------- */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; text-align: center; }
 .stat strong { display: block; font-family: "Playfair Display", Georgia, serif; font-size: clamp(40px, 5vw, 60px); color: var(--gold-2); }
+.stat.craft strong { font-size: clamp(21px, 2.4vw, 30px); line-height: 1.3; }
+.stat.craft span { display: block; margin-top: 10px; line-height: 1.55; }
 .stat span { color: var(--muted); font-size: 14px; letter-spacing: 0.08em; }
 
 /* ---------- Team ---------- */
