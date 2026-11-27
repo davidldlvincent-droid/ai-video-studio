@@ -43,7 +43,7 @@
     revealEls.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* ---------- 3D tilt on cards ---------- */
+  /* ---------- 3D tilt on cards (with light glare) ---------- */
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!reduceMotion) {
     document.querySelectorAll("[data-tilt]").forEach(function (card) {
@@ -52,9 +52,22 @@
         var x = (ev.clientX - r.left) / r.width - 0.5;
         var y = (ev.clientY - r.top) / r.height - 0.5;
         card.style.transform =
-          "perspective(900px) rotateY(" + (x * 7).toFixed(2) + "deg) rotateX(" + (-y * 7).toFixed(2) + "deg) translateY(-4px)";
+          "perspective(850px) rotateY(" + (x * 11).toFixed(2) + "deg) rotateX(" + (-y * 11).toFixed(2) + "deg) translateY(-5px) scale(1.02)";
+        card.style.setProperty("--mx", ((x + 0.5) * 100).toFixed(1) + "%");
+        card.style.setProperty("--my", ((y + 0.5) * 100).toFixed(1) + "%");
       });
       card.addEventListener("mouseleave", function () { card.style.transform = ""; });
+    });
+
+    /* ---------- Magnetic gold buttons ---------- */
+    document.querySelectorAll(".btn-gold").forEach(function (btn) {
+      btn.addEventListener("mousemove", function (ev) {
+        var r = btn.getBoundingClientRect();
+        var x = (ev.clientX - r.left) / r.width - 0.5;
+        var y = (ev.clientY - r.top) / r.height - 0.5;
+        btn.style.transform = "translate(" + (x * 10).toFixed(1) + "px," + (y * 7).toFixed(1) + "px)";
+      });
+      btn.addEventListener("mouseleave", function () { btn.style.transform = ""; });
     });
   }
 
