@@ -392,3 +392,13 @@ footer { border-top: 1px solid var(--line-soft); background: var(--coal); paddin
 }
 .work-card:hover::after { opacity: 1; }
 .btn-gold { transition: transform 0.18s ease, box-shadow 0.25s ease; will-change: transform; }
+
+/* ---- Cover design gallery ---- */
+.covers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+@media (max-width: 900px) { .covers-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .covers-grid { grid-template-columns: 1fr; } }
+.cover-card { margin: 0; }
+.cover-card img { width: 100%; display: block; border-radius: 10px; border: 1px solid rgba(201,162,39,.45); box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+.cover-card figcaption { padding: 12px 4px 0; display: flex; flex-direction: column; gap: 2px; }
+.cover-card figcaption strong { font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; }
+.cover-card figcaption span { opacity: .75; font-size: .92rem; }
